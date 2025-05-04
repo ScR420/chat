@@ -12,15 +12,15 @@ function UsernamePrompt({ setUsername }) {
 
     return (
         <form onSubmit={handleSubmit} style={{ padding: 20 }}>
-            <h2>Wie heißt du?</h2>
+            <h2>Benutzernamen eingeben</h2>
             <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Benutzername"
+                placeholder="Dein Name"
                 style={{ marginRight: 10 }}
             />
-            <button type="submit">Weiter</button>
+            <button type="submit">Starten</button>
         </form>
     );
 }
