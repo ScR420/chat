@@ -4,6 +4,10 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const Message = require("./models/Message");
+const User = require("./models/User");
+const jwt = require("jsonwebtoken");
+const authRoutes = require("./routes/auth");
+const authMiddleware = require("./middleware/auth");
 
 const app = express();
 const server = http.createServer(app);
@@ -11,7 +15,8 @@ const server = http.createServer(app);
 mongoose.connect("mongodb://localhost:27017/chatapp", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-});
+}).then(() => console.log("MongoDB verbunden"))
+    .catch((err) => console.error("MongoDB Verbindungsfehler:", err));
 
 app.use(cors({
     origin: "http://localhost:3000",
@@ -19,6 +24,10 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Routen
+app.use("/api/auth", authRoutes);
+
+// Socket.IO Setup
 const io = new Server(server, {
     cors: {
         origin: "http://localhost:3000",
@@ -27,19 +36,20 @@ const io = new Server(server, {
     },
 });
 
-io.on("connection", async (socket) => {
+io.on("connection", (socket) => {
     console.log("Benutzer verbunden:", socket.id);
 
-    const messages = await Message.find().sort({ createdAt: 1 }).limit(100);
-    socket.emit("chat_history", messages);
+    socket.on("join_room", async (room) => {
+        socket.join(room);
+        const messages = await Message.find({ room }).sort({ createdAt: 1 }).limit(100);
+        socket.emit("chat_history", messages);
+    });
 
     socket.on("send_message", async (data) => {
-        const newMsg = new Message({
-            username: data.username,
-            message: data.message,
-        });
+        const { username, message, room } = data;
+        const newMsg = new Message({ username, message, room });
         await newMsg.save();
-        io.emit("receive_message", newMsg);
+        io.to(room).emit("receive_message", newMsg);
     });
 
     socket.on("disconnect", () => {
@@ -49,5 +59,5 @@ io.on("connection", async (socket) => {
 
 const PORT = 3001;
 server.listen(PORT, () => {
-    console.log("Server läuft auf http://localhost:" + PORT);
+    console.log(`Server läuft auf http://localhost:${PORT}`);
 });
