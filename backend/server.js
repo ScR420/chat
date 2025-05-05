@@ -5,9 +5,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const Message = require("./models/Message");
 const User = require("./models/User");
-const jwt = require("jsonwebtoken");
 const authRoutes = require("./routes/auth");
-const authMiddleware = require("./middleware/auth");
 
 const app = express();
 const server = http.createServer(app);
@@ -15,25 +13,16 @@ const server = http.createServer(app);
 mongoose.connect("mongodb://localhost:27017/chatapp", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-}).then(() => console.log("MongoDB verbunden"))
+})
+    .then(() => console.log("MongoDB verbunden"))
     .catch((err) => console.error("MongoDB Verbindungsfehler:", err));
 
-app.use(cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-}));
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
-
-// Routen
 app.use("/api/auth", authRoutes);
 
-// Socket.IO Setup
 const io = new Server(server, {
-    cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
-        credentials: true,
-    },
+    cors: { origin: "http://localhost:5173", methods: ["GET", "POST"], credentials: true },
 });
 
 io.on("connection", (socket) => {

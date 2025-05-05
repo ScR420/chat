@@ -70,7 +70,7 @@ ChatApp ist eine Webanwendung, die es Nutzern ermöglicht, sich zu registrieren,
 
 ### Frontend (`/frontend`)
 
-- `src/components/ChatRoom.js` – Chatroom-Komponente
+- `src/components/ChatRoom.jsx` – Chatroom-Komponente
 - `src/App.js` – Hauptkomponente
 - `src/index.js` – Einstiegspunkt
 
@@ -79,7 +79,7 @@ ChatApp ist eine Webanwendung, die es Nutzern ermöglicht, sich zu registrieren,
 - `server.js` – Einstiegspunkt für den Server
 - `models/Message.js` – Mongoose-Modell für Nachrichten
 - `models/User.js` – Mongoose-Modell für Benutzer
-- `routes/auth.js` – Routen für Registrierung und Login
+- `routes/auth.js` – Routen für Registrierung und LoginForm
 - `middleware/auth.js` – Middleware für JWT-Validierung
 
 ## 📡 API-Endpunkte
