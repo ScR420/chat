@@ -98,7 +98,7 @@ ChatApp ist eine Webanwendung, die es Nutzern ermöglicht, sich zu registrieren,
 
 ## 📄 Lizenz
 
-Dieses Projekt steht unter der [MIT-Lizenz](LICENSE).
+Cooming Soon
 
 ---
 
