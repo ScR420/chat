@@ -1,39 +1,54 @@
 ﻿import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { PageContainer, Input, Button, LinkText } from "../styles.js";
 
-export default function LoginForm({ setUser, setToken }) {
+function LoginForm({ setUser, setToken }) {
     const [identifier, setIdentifier] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const login = async () => {
+    const handleLogin = async () => {
         try {
-            const res = await axios.post("http://localhost:3001/api/auth/login", { identifier, password });
-            setUser(res.data.user);
-            setToken(res.data.token);
+            const response = await fetch("http://localhost:3001/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ identifier, password }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.msg || "Login fehlgeschlagen");
+
+            setUser(data.user);
+            setToken(data.token);
             navigate("/rooms");
         } catch (err) {
-            alert("Login fehlgeschlagen: " + (err.response?.data?.msg || err.message));
+            setError(err.message);
         }
     };
 
     return (
-        <div style={{ padding: 20 }}>
+        <PageContainer>
             <h2>Login</h2>
-            <input
-                placeholder="Email oder Benutzername"
+            {error && <p style={{ color: "red" }}>{error}</p>}
+            <Input
+                placeholder="Benutzername oder Email"
                 value={identifier}
                 onChange={(e) => setIdentifier(e.target.value)}
-            /><br />
-            <input
+            />
+            <Input
                 type="password"
                 placeholder="Passwort"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-            /><br />
-            <button onClick={login}>Einloggen</button>
-            <p>Noch keinen Account? <a href="/register">Registrieren</a></p>
-        </div>
+            />
+            <Button onClick={handleLogin}>Login</Button>
+            <p>
+                Noch keinen Account?{" "}
+                <LinkText onClick={() => navigate("/register")}>Registrieren</LinkText>
+            </p>
+        </PageContainer>
     );
 }
+
+export default LoginForm;

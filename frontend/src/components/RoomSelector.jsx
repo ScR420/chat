@@ -1,21 +1,24 @@
 ﻿import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PageContainer, Input, Button } from "../styles.js";
 
 export default function RoomSelector({ user }) {
     const [room, setRoom] = useState("");
     const navigate = useNavigate();
 
     const joinRoom = () => {
-        if (room.trim()) {
-            navigate(`/chat/${room}`);
-        }
+        if (room.trim()) navigate(`/chat/${room}`);
     };
 
     return (
-        <div style={{ padding: 20 }}>
+        <PageContainer>
             <h2>Willkommen, {user?.username}</h2>
-            <input value={room} onChange={(e) => setRoom(e.target.value)} placeholder="Raumname eingeben" />
-            <button onClick={joinRoom}>Beitreten</button>
-        </div>
+            <Input
+                value={room}
+                onChange={(e) => setRoom(e.target.value)}
+                placeholder="Raumname eingeben"
+            />
+            <Button onClick={joinRoom}>Beitreten</Button>
+        </PageContainer>
     );
 }

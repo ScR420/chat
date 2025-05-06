@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
+import { PageContainer, Input, Button, ChatBox } from "../styles.js";
 
 const socket = io("http://localhost:3001");
 
@@ -27,15 +28,15 @@ export default function Chatroom({ user }) {
     };
 
     return (
-        <div style={{ padding: 20 }}>
+        <PageContainer>
             <h2>Raum: {roomId}</h2>
-            <div style={{ border: "1px solid gray", height: 300, overflowY: "scroll", marginBottom: 10 }}>
+            <ChatBox>
                 {chat.map((msg, i) => (
                     <div key={i}><strong>{msg.username}:</strong> {msg.message}</div>
                 ))}
-            </div>
-            <input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Nachricht eingeben" />
-            <button onClick={sendMessage}>Senden</button>
-        </div>
+            </ChatBox>
+            <Input value={message} onChange={(e) => setMessage(e.target.value)} placeholder="Nachricht eingeben" />
+            <Button onClick={sendMessage}>Senden</Button>
+        </PageContainer>
     );
 }

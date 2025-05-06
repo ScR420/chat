@@ -1,4 +1,5 @@
 ﻿import React, { useState } from "react";
+import { PageContainer, Input, Button } from "../styles.js";
 
 function RegisterForm() {
     const [username, setUsername] = useState("");
@@ -15,9 +16,7 @@ function RegisterForm() {
             });
 
             const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.msg || "Registrierung fehlgeschlagen");
-            }
+            if (!response.ok) throw new Error(data.msg || "Registrierung fehlgeschlagen");
 
             alert("Registrierung erfolgreich!");
         } catch (err) {
@@ -26,29 +25,14 @@ function RegisterForm() {
     };
 
     return (
-        <div>
+        <PageContainer>
             <h2>Registrieren</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
-            <input
-                type="text"
-                placeholder="Benutzername"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-            />
-            <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-            />
-            <input
-                type="password"
-                placeholder="Passwort"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-            />
-            <button onClick={handleRegister}>Registrieren</button>
-        </div>
+            <Input placeholder="Benutzername" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Input type="password" placeholder="Passwort" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Button onClick={handleRegister}>Registrieren</Button>
+        </PageContainer>
     );
 }
 
